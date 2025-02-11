@@ -1,5 +1,5 @@
 from django import forms
-from .models import Department,Program,Student,Scholarship,TransferCertificate, Caste, Religion, Quota,ProgramLevel
+from .models import Department,Program,Student,TransferCertificate, Caste, Religion, Quota,ProgramLevel,Scholarship, StudentScholarship,User,QualifiedMark
 
 
 class DepartmentForm(forms.ModelForm):
@@ -50,13 +50,6 @@ class StudentForm(forms.ModelForm):
             raise forms.ValidationError("Pincode must be 6 digits.")
         return pincode
 
-class ScholarshipForm(forms.ModelForm):
-    class Meta:
-        model =Scholarship
-        fields = ['scholarship_name']
-        widgets = {
-            'scholarship_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter scholarship name'}),
-        }
 class TransferCertificateForm(forms.ModelForm):
     class Meta:
         model = TransferCertificate
@@ -66,4 +59,56 @@ class TransferCertificateForm(forms.ModelForm):
             'date_of_issue': forms.DateInput(attrs={'type': 'date'}),
         }
 
+class ScholarshipForm(forms.ModelForm):
+    class Meta:
+        model = Scholarship
+        fields = '__all__' 
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Scholarship Name'}),
+        }
 
+class StudentScholarshipForm(forms.ModelForm):
+    class Meta:
+        model = StudentScholarship
+        fields = ['student', 'scholarship', 'amount']
+        widgets = {
+            'student': forms.Select(attrs={'class': 'form-control'}),
+            'scholarship': forms.Select(attrs={'class': 'form-control'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter Amount'}),
+        }
+# class UserForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['user_id', 'password', 'role']
+#         widgets = {
+#             'password': forms.PasswordInput(),
+#         }
+
+
+class UserForm(forms.ModelForm):
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Confirm Password"
+    )
+
+    class Meta:
+        model = User
+        fields = ['user_id', 'password', 'confirm_password', 'role']
+        widgets = {
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', "Passwords do not match!")
+
+        return cleaned_data
+    
+class QualifiedMarkForm(forms.ModelForm):
+    class Meta:
+        model = QualifiedMark
+        fields = ['stud', 'board', 'normalized_marks']

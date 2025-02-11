@@ -19,21 +19,37 @@ urlpatterns = [
     path('students/add/', views.add_student, name='add_student'),  # Add student
     path('students/edit/<int:student_id>/', views.edit_student, name='edit_student'),  # Edit student
     path('students/delete/<int:pk>/', views.delete_student, name='delete_student'),  # Delete student
-
-
-    path('manage_scholarships/', views.manage_scholarship, name='manage_scholarship'),  # View all scholarships
-    path('scholarships/add/', views.add_scholarship, name='add_scholarship'),  # Add new scholarship
-    path('scholarships/edit/<int:pk>/', views.edit_scholarship, name='edit_scholarship'),  # Edit scholarship
-    path('scholarships/delete/<int:pk>/', views.delete_scholarship, name='delete_scholarship'),  # Delete scholarship
-    #path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+   
     path('', custom_login, name='login'),
 
     path('transfer-certificates/', views.transfer_certificate_list, name='transfer_certificate_list'),
     path('add-transfer-certificate/', views.add_transfer_certificate, name='add_transfer_certificate'),
     path('edit-transfer-certificate/<int:tc_id>/', views.edit_transfer_certificate, name='edit_transfer_certificate'),
     path('delete-transfer-certificate/<int:tc_id>/', views.delete_transfer_certificate, name='delete_transfer_certificate'),
+
+
+    path('manage_scholarships/', views.manage_scholarships, name='manage_scholarships'),
+    path('scholarship_details/', views.scholarship_details, name='scholarship_details'),
+    path('add_scholarship/', views.add_scholarship, name='add_scholarship'),
+    path('edit_scholarship/<int:scholarship_id>/', views.edit_scholarship, name='edit_scholarship'),
+    path('delete_scholarship/<int:scholarship_id>/', views.delete_scholarship, name='delete_scholarship'),
+
+    path('student_scholarships/', views.student_scholarships, name='student_scholarships'),
+    path('add_student_scholarship/', views.add_student_scholarship, name='add_student_scholarship'),
+    path('edit_student_scholarship/<int:student_scholarship_id>/', views.edit_student_scholarship, name='edit_student_scholarship'),
+    path('delete_student_scholarship/<int:student_scholarship_id>/', views.delete_student_scholarship, name='delete_student_scholarship'),
+
+
+    path('manage_users/', views.manage_users, name='manage_users'),
+    path('add_user/', views.add_user, name='add_user'),
+    path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
+    path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
+
+
+    path('qualified_marks/',views. manage_qualified_marks, name='manage_qualified_marks'),
+    path('qualified_marks/add/',views.add_qualified_mark, name='add_qualified_mark'),
+    path('qualified_marks/edit/<int:stud_id>/',views.edit_qualified_mark, name='edit_qualified_mark'),
+    path('qualified_marks/delete/<int:stud_id>/',views.delete_qualified_mark, name='delete_qualified_mark'),
 
 ]
   

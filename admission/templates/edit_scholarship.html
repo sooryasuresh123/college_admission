@@ -1,20 +1,15 @@
 {% extends 'base.html' %}
 
+{% block title %}Edit Scholarship{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-    <h2 class="text-center">Edit Scholarships</h2>
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    {{ form.scholarship_name.label_tag }}
-                    {{ form.scholarship_name }}
-                </div>
-                <button type="submit" class="btn btn-warning">Update</button>
-                <a href="{% url 'manage_scholarship' %}" class="btn btn-secondary">Cancel</a>
-            </form>
-        </div>
-    </div>
+    <h2>Edit Scholarship</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'manage_scholarships' %}" class="btn btn-secondary">Cancel</a>
+    </form>
 </div>
 {% endblock %}

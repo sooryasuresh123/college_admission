@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center">Manage Scholarship</h2>
-
+<div class="container mt-5">
+    <h2>Scholarship Details</h2>
     <table class="table table-striped">
         <thead class="table-dark">
             <tr>
-                <th>Sl no</th>
+                <th>Sl No</th>
                 <th>Scholarship Name</th>
+                <th>Scholarship Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -16,20 +16,16 @@
             {% for scholarship in scholarships %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ scholarship.scholarship_name}}</td>
+                <td>{{ scholarship.name }}</td>
+                <td>{{ scholarship.scholarship_type }}</td>
                 <td>
                     <a href="{% url 'edit_scholarship' scholarship.id %}" class="btn btn-warning btn-sm">Edit</a>
                     <a href="{% url 'delete_scholarship' scholarship.id %}" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3" class="text-center">No scholarships available.</td>
-            </tr>
             {% endfor %}
         </tbody>
     </table>
-
     <a href="{% url 'add_scholarship' %}" class="btn btn-primary">Add Scholarship</a>
 </div>
 {% endblock %}

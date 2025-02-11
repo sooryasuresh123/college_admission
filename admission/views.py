@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Department,Program,Student,Scholarship,TransferCertificate
-from .forms import DepartmentForm,ProgramForm,StudentForm,ScholarshipForm, TransferCertificateForm
+from .models import Department,Program,Student,TransferCertificate,Scholarship,StudentScholarship,User,QualifiedMark
+from .forms import DepartmentForm,ProgramForm,StudentForm, TransferCertificateForm,ScholarshipForm,StudentScholarshipForm,UserForm,QualifiedMarkForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
@@ -108,41 +108,6 @@ def delete_student(request, pk):
         return redirect('manage_student')
    return render(request, 'delete_student.html', {'student': student})
 
-def manage_scholarship(request):
-   scholarships = Scholarship.objects.all()
-   return render(request, 'manage_scholarship.html', {'scholarships': scholarships})
-
-def add_scholarship(request):
-    if request.method == 'POST':
-        form = ScholarshipForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('manage_scholarship')
-    else:
-        form = ScholarshipForm()
-    return render(request, 'add_scholarship.html', {'form': form})
-
-def edit_scholarship(request, pk):
-    scholarship = get_object_or_404(Scholarship, pk=pk)
-    if request.method == 'POST':
-        form = ScholarshipForm(request.POST, instance=scholarship)
-        if form.is_valid():
-            form.save()
-            return redirect('manage_scholarship')
-    else:
-        form =ScholarshipForm(instance=scholarship)
-    return render(request, 'edit_scholarship.html', {'form': form})
-
-def delete_scholarship(request, pk):
-   scholarship = get_object_or_404(Scholarship, pk=pk)
-   if request.method == 'POST':
-        scholarship.delete()
-        return redirect('manage_scholarship')
-   return render(request, 'delete_scholarship.html', {'scholarship': scholarship})
-
-
-
-
 
 def custom_login(request):
     if request.method == 'POST':
@@ -195,3 +160,155 @@ def delete_transfer_certificate(request, tc_id):
         return redirect('transfer_certificate_list')  # Redirect to TC list page
     
     return render(request, 'confirm_delete.html', {'tc': tc})
+
+
+
+def manage_scholarships(request):
+    scholarships = Scholarship.objects.all()
+    return render(request, 'manage_scholarships.html')
+def scholarship_details(request):
+    scholarships = Scholarship.objects.all()
+    return render(request, 'scholarship_details.html', {'scholarships': scholarships})
+
+# Add Scholarship
+def add_scholarship(request):
+    if request.method == 'POST':
+        form = ScholarshipForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('scholarship_details')
+    else:
+        form = ScholarshipForm()
+    return render(request, 'add_scholarship.html', {'form': form})
+def edit_scholarship(request, scholarship_id):
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+    if request.method == 'POST':
+        form = ScholarshipForm(request.POST, instance=scholarship)
+        if form.is_valid():
+            form.save()
+            return redirect('scholarship_details')
+    else:
+        form = ScholarshipForm(instance=scholarship)
+    return render(request, 'edit_scholarship.html', {'form': form})
+
+def delete_scholarship(request, scholarship_id):
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+    scholarship.delete()
+    return redirect('scholarship_details')
+
+def student_scholarships(request):
+    student_scholarships = StudentScholarship.objects.all()
+    return render(request, 'student_scholarships.html', {'student_scholarships': student_scholarships})
+
+# Add Student Scholarship
+def add_student_scholarship(request):
+    if request.method == 'POST':
+        form = StudentScholarshipForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('student_scholarships')
+    else:
+        form = StudentScholarshipForm()
+    return render(request, 'add_student_scholarship.html', {'form': form})
+def edit_student_scholarship(request, student_scholarship_id):
+    student_scholarship = get_object_or_404(StudentScholarship, id=student_scholarship_id)
+    if request.method == 'POST':
+        form = StudentScholarshipForm(request.POST, instance=student_scholarship)
+        if form.is_valid():
+            form.save()
+            return redirect('student_scholarships')
+    else:
+        form = StudentScholarshipForm(instance=student_scholarship)
+    return render(request, 'edit_student_scholarship.html', {'form': form})
+
+def delete_student_scholarship(request, student_scholarship_id):
+    student_scholarship = get_object_or_404(StudentScholarship, id=student_scholarship_id)
+    student_scholarship.delete()
+    return redirect('student_scholarships')
+
+
+
+
+def manage_users(request):
+    users = User.objects.all()
+    return render(request, 'manage_users.html', {'users': users})
+
+def add_user(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_users')
+    else:
+        form = UserForm()
+    return render(request, 'add_user.html', {'form': form})
+
+def edit_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_users')
+    else:
+        form = UserForm(instance=user)
+    return render(request, 'edit_user.html', {'form': form})
+
+def delete_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('manage_users')
+    return render(request, 'delete_user.html', {'user': user})
+
+# from django.shortcuts import render, redirect
+# from django.contrib.auth.decorators import login_required
+
+# @login_required
+# def dashboard(request):
+#     user = request.user
+    
+#     if user.is_student():
+#         return render(request, 'dashboard.html')
+    
+#     elif user.is_office_admin():
+#         return render(request, 'dashboard.html')
+    
+#     elif user.is_principal():
+#         return render(request, 'dashboard.html')
+    
+#     else:
+#         return redirect('login')  # Redirect to login if no role found
+def manage_qualified_marks(request):
+    qualified_marks = QualifiedMark.objects.select_related('stud','board').all()
+    return render(request, 'manage_qualified_marks.html', {'qualified_marks': qualified_marks})
+
+def add_qualified_mark(request):
+    if request.method == 'POST':
+        form = QualifiedMarkForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_qualified_marks')
+    else:
+        form = QualifiedMarkForm()
+    return render(request, 'add_qualified_mark.html', {'form': form})
+
+def edit_qualified_mark(request, stud_id):
+    qualified_mark = get_object_or_404(QualifiedMark, stud_id=stud_id)
+    if request.method == 'POST':
+        form = QualifiedMarkForm(request.POST, instance=qualified_mark)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_qualified_marks')
+    else:
+        form = QualifiedMarkForm(instance=qualified_mark)
+    return render(request, 'edit_qualified_mark.html', {'form': form})
+
+def delete_qualified_mark(request, stud_id):
+    qualified_mark = get_object_or_404(QualifiedMark, stud_id=stud_id)
+    
+    if request.method == 'POST':
+        qualified_mark.delete()
+        return redirect('manage_qualified_marks')
+
+    return render(request, 'delete_qualified_mark.html', {'qualified_mark': qualified_mark})
